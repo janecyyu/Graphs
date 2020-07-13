@@ -110,7 +110,7 @@ class Graph:
             arr.append(starting_vertex)
             arr.append(next_v)
             q.enqueue(arr)
-        print(q.queue)
+
         # Create a Set to store visited vertices
         visited = set()
         # While the queue is not empty...
@@ -119,23 +119,19 @@ class Graph:
             path = q.dequeue()
             # Grab the last vertex from the PATH
             last_v = path[len(path)-1]
-            print("l_v", last_v)
-            print("path", path)
             # If that vertex has not been visited...
             if last_v not in visited:
                 # CHECK IF IT'S THE TARGET
                 if last_v == destination_vertex:
                     # IF SO, RETURN PATH
                     return path
-            # Mark it as visited...
-            else:
+                # Mark it as visited...
                 visited.add(last_v)
                 # Then add A PATH TO its neighbors to the back of the queue
                 for next_v in self.get_neighbors(last_v):
-                    arr = path
-                    arr.append(next_v)
-                    q.enqueue(arr)
-                    print("q", q.queue)
+                    new_arr = path.copy()
+                    new_arr.append(next_v)
+                    q.enqueue(new_arr)
 
     def dfs(self, starting_vertex, destination_vertex):
         """

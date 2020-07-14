@@ -136,6 +136,7 @@ class Graph:
                     new_arr = path.copy()
                     new_arr.append(next_v)
                     q.enqueue(new_arr)
+        return None
 
     def dfs(self, starting_vertex, destination_vertex):
         """

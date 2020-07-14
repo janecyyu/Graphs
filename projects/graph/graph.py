@@ -84,8 +84,6 @@ class Graph:
 
         This should be done using recursion.
         """
-        visited = set()
-
         def dft_indoor(node, visited):
             if node is None or node in visited:
                 return
@@ -94,6 +92,8 @@ class Graph:
             print(node)
             for next_v in self.get_neighbors(node):
                 dft_indoor(next_v, visited)
+
+        visited = set()
 
         dft_indoor(starting_vertex, visited)
 
@@ -142,8 +142,7 @@ class Graph:
         # Create an empty queue and enqueue A PATH TO the starting vertex ID
         s = Stack()
         for next_v in self.get_neighbors(starting_vertex):
-            arr = []
-            arr.append(starting_vertex)
+            arr = [starting_vertex]
             arr.append(next_v)
             s.push(arr)
 
@@ -177,7 +176,26 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+        def dfs_indoor(node, visited, path):
+            if node in visited:
+                return False
+
+            visited.add(node)
+            path.append(node)
+            if node == destination_vertex:
+                return True
+
+            for next_v in self.get_neighbors(node):
+                if dfs_indoor(next_v, visited, path):
+                    return True
+
+            path.pop()
+            return False
+
+        visited = set()
+        path = []
+        dfs_indoor(starting_vertex, visited, path)
+        return path
 
 
 if __name__ == '__main__':

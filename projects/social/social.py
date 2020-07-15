@@ -80,22 +80,27 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
-        q = Queue()
-        q.enqueue(1)
-        # v = user_id
         for k, v in self.friendships.items():
             if k == user_id:
                 visited[k] = k
-            elif (user_id in v):
-                visited[k] = [user_id, k]
-        # while q.size() > 0:
+            # elif (visited[k] in v):
+            #     visited[k] = [user_id, k]
+            else:
+                for neighbor in self.get_neighbors(k):
+                    if neighbor in visited:
+                        visited[k] = []
+                        visited[k].append(visited[neighbor])
+                        visited[k].append(k)
 
         return visited
+
+    def get_neighbors(self, friend):
+        return self.friendships[friend]
 
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populate_graph(10, 2)
+    sg.populate_graph(7, 2)
     print(sg.friendships)
     connections = sg.get_all_social_paths(1)
     print(connections)

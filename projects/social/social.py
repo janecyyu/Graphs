@@ -86,6 +86,8 @@ class SocialGraph:
         for k, v in self.friendships.items():
             if k == user_id:
                 visited[k] = k
+            elif (user_id in v):
+                visited[k] = [user_id, k]
         # while q.size() > 0:
 
         return visited

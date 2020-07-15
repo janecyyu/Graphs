@@ -2,6 +2,14 @@ from util import Stack, Queue  # These may come in handy
 
 
 def earliest_ancestor(ancestors, starting_node):
+    # transfer ancestors to dict type
+    dict = {}
+    for x, y in ancestors:
+        if x not in dict:
+            dict[x] = [y]
+        else:
+            dict[x].append(y)
+
     q = Queue()
     q.enqueue([starting_node])
     visited = set()
@@ -12,34 +20,28 @@ def earliest_ancestor(ancestors, starting_node):
         if v not in visited:
             visited.add(v)
             # print("visited:", v)
-            for next_node in get_neighbors(ancestors, v):
+            for next_node in get_neighbors(dict, v):
                 new_arr = path.copy()
                 new_arr.append(next_node)
                 q.enqueue(new_arr)
 
     if v == starting_node:
-        print(-1)
+        # print(-1)
         return -1
-    print(v)
+    # print(v)
     return v
 
 
-def get_neighbors(ancestors, node):
+def get_neighbors(dict, node):
     neighbors = []
     two_parents = 0
-    dict = {}
-    for x, y in ancestors:
-        if x not in dict:
-            dict[x] = [y]
-        else:
-            dict[x].append(y)
-    # print(dict)
     for x, y in dict.items():
         if node in y:
             # add to neighbors
             neighbors.append(x)
+    # check if two parents
     for n in neighbors:
-        if len(get_neighbors(ancestors, n)) == 0:
+        if len(get_neighbors(dict, n)) == 0:
             two_parents += 1
         if two_parents == 2:
             neighbors = [min(neighbors)]

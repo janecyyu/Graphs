@@ -78,18 +78,34 @@ class SocialGraph:
 
         The key is the friend's ID and the value is the path.
         """
-        visited = {}  # Note that this is a dictionary, not a set
+        # visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
         # store_k = set()
-        for k, v in self.friendships.items():
-            if k == user_id:
-                visited[k] = [k]
-            else:
-                for neighbor in self.get_neighbors(k):
-                    if neighbor in visited:
-                        visited[k] = visited[neighbor] + [k]
+        # for k, v in self.friendships.items():
+        #     if k == user_id:
+        #         visited[k] = [k]
+        #     else:
+        #         for neighbor in self.get_neighbors(k):
+        #             if neighbor in visited:
+        #                 visited[k] = visited[neighbor] + [k]
 
-        return visited
+        q = Queue()
+        visited = set()
+        result = {}
+
+        q.enqueue([user_id])
+        while q.size() > 0:
+            path = q.dequeue()
+            u = path[-1]
+            if u not in visited:
+                visited.add(u)
+                result[u] = path
+                for neighbor in self.friendships[u]:
+                    path_copy = list(path)
+                    path_copy.append(neighbor)
+                    q.enqueue(path_copy)
+
+        return result
 
     def get_neighbors(self, friend):
         return self.friendships[friend]
@@ -97,7 +113,7 @@ class SocialGraph:
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populate_graph(7, 2)
+    sg.populate_graph(10, 2)
     print(sg.friendships)
     connections = sg.get_all_social_paths(1)
     print(connections)

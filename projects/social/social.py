@@ -80,17 +80,14 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
+        # store_k = set()
         for k, v in self.friendships.items():
             if k == user_id:
-                visited[k] = k
-            # elif (visited[k] in v):
-            #     visited[k] = [user_id, k]
+                visited[k] = [k]
             else:
                 for neighbor in self.get_neighbors(k):
                     if neighbor in visited:
-                        visited[k] = []
-                        visited[k].append(visited[neighbor])
-                        visited[k].append(k)
+                        visited[k] = visited[neighbor] + [k]
 
         return visited
 

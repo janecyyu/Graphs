@@ -7,53 +7,6 @@ import random
 from ast import literal_eval
 
 
-def get_neighbors(path):
-    direc = path.get_exits_string()
-    direc = direc[8:-1]
-    direc = direc.replace(',', '').replace(' ', '')
-
-    return direc
-
-
-def go_dep(path, n, e, w, s):
-    path_n_copy = path
-
-    while path_n_copy.get_room_in_direction(n):
-        # count_n += 1
-        traversal_path.append(n)
-        path_n_copy = path_n_copy.get_room_in_direction(n)
-    # go south check if the room has neighbors
-    while len(get_neighbors(path_n_copy)) > 0 and path_n_copy.id != 0:
-        # w or e
-        w_copy = path_n_copy
-        count_w = 0
-        while w in get_neighbors(w_copy):
-            count_w += 1
-            traversal_path.append(w)
-            w_copy = w_copy.get_room_in_direction(w)
-        # 走到底後檢查每個房間有沒有n方向的房間
-        check_n = w_copy
-        count_check_n = 0
-        while n in get_neighbors(check_n):
-            count_check_n += 1
-            traversal_path.append(n)
-            check_n = check_n.get_room_in_direction(n)
-
-        for i in range(count_w):
-            traversal_path.append(e)
-        e_copy = path_n_copy
-        count_e = 0
-        while e in get_neighbors(e_copy):
-            count_e += 1
-            traversal_path.append(e)
-            e_copy = e_copy.get_room_in_direction(e)
-        for i in range(count_e):
-            traversal_path.append(w)
-
-        traversal_path.append(s)
-        path_n_copy = path_n_copy.get_room_in_direction(s)
-
-
 class Path:
     def __init__(self, room, path):
         self.room = room
@@ -165,63 +118,12 @@ else:
 #######
 # UNCOMMENT TO WALK AROUND
 #######
-# t = player.current_room  # Exits: [n, s, w, e]
-# print("t", type(t))
-# t = player.current_room.get_exits_string() # Exits: [n, s, w, e]
-# t = player.current_room.name  # Room 0
-# t = player.current_room.id  # 0
-# t = player.current_room.get_room_in_direction("n")
-# Room 1
-
-#    (3,6)
-
-# Exits: [n, s]
-
-player.current_room.print_room_description(player)
-while True:
-    cmds = input("-> ").lower().split(" ")
-    if cmds[0] in ["n", "s", "e", "w"]:
-        player.travel(cmds[0], True)
-    elif cmds[0] == "q":
-        break
-    else:
-        print("I did not understand that command.")
-
-
-# NoneType = type(None)
-# q = Queue()
-# visited = set()
-# # print(type(player.current_room))
-# q.enqueue(player.current_room)
-# while q.size() > 0:
-#     path = q.dequeue()
-
-#     if path not in visited:
-#         print(path)
-#         visited.add(path)
-#         # get neighbors
-#         directions = path.get_exits_string()
-#         # grab n,e,s,w only
-#         directions = directions[8:-1]
-#         directions = directions.replace(',', '').replace(' ', '')
-#         for d in directions:
-#             #         path_copy = path
-
-#             if d == "n":
-#                 # go n until touch wall
-#                 go_dep(path, "n", "e", "w", "s")
-
-#             if d == "s":
-#                 # go n until touch wall
-#                 go_dep(path, "s", "e", "w", "n")
-
-#             if d == "w":
-#                 # go west until touch wall
-#                 go_dep(path, "w", "n", "s", "e")
-
-#             if d == "e":
-#                 # go west until touch wall
-#                 go_dep(path, "e", "n", "s", "w")
-
-
-# print("t_p", traversal_path)
+# player.current_room.print_room_description(player)
+# while True:
+#     cmds = input("-> ").lower().split(" ")
+#     if cmds[0] in ["n", "s", "e", "w"]:
+#         player.travel(cmds[0], True)
+#     elif cmds[0] == "q":
+#         break
+#     else:
+#         print("I did not understand that command.")

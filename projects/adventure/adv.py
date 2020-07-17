@@ -6,6 +6,15 @@ from util import Stack, Queue
 import random
 from ast import literal_eval
 
+
+def get_neighbors(path):
+    direc = path.get_exits_string()
+    direc = direc[8:-1]
+    direc = direc.replace(',', '').replace(' ', '')
+
+    return direc
+
+
 # Load world
 world = World()
 
@@ -30,6 +39,7 @@ player = Player(world.starting_room)
 # traversal_path = ['n', 'n', "s", "s", "s", "s", "s"]
 traversal_path = []
 count_n = 0
+count_n_w = 0
 NoneType = type(None)
 q = Queue()
 visited = set()
@@ -58,41 +68,37 @@ while q.size() > 0:
 
             if d == "n":
                 # go n until touch wall
-                path_copy = path
+                path_n_copy = path
 
-                while path_copy.get_room_in_direction("n"):
-                    count_n += 1
+                while path_n_copy.get_room_in_direction("n"):
+                    # count_n += 1
                     traversal_path.append("n")
-                    path_copy = path_copy.get_room_in_direction("n")
+                    path_n_copy = path_n_copy.get_room_in_direction("n")
+                # go south check if the room has neighbors
+                while len(get_neighbors(path_n_copy)) > 0 and path_n_copy.id != 0:
+                    # w or e
+                    w_copy = path_n_copy
+                    count_w = 0
+                    while "w" in get_neighbors(w_copy):
+                        count_w += 1
+                        traversal_path.append("w")
+                        w_copy = w_copy.get_room_in_direction("w")
+                    for i in range(count_w):
+                        traversal_path.append("e")
+                    e_copy = path_n_copy
+                    count_e = 0
+                    while "e" in get_neighbors(e_copy):
+                        traversal_path.append("e")
+                        e_copy = e_copy.get_room_in_direction("e")
+                    for i in range(count_e):
+                        traversal_path.append("w")
 
-            #     traversal_path.append("s")
-            # if d == "s":
-            #     traversal_path.append("n")
-            # if d == "w":
-            #     traversal_path.append("e")
-            # if d == "e":
-            #     traversal_path.append("w")
-            # new_room = path.get_room_in_direction(d)
-            # path.append(new_room)
-            # q.enqueue(new_room)
-            # print(q.queue)
+                    traversal_path.append("s")
+                    path_n_copy = path_n_copy.get_room_in_direction("s")
+
 
 print("count_n", count_n)
 print("t_p", traversal_path)
-
-# if u not in visited:
-#     visited.add(u)
-#     for neighbor in u.get_exits():
-#         print("u", u)
-#         path_copy = list(u)
-#         room_name = u.get_room_in_direction(neighbor)
-#         path_copy.append(room_name)
-#         q.enqueue(path_copy)
-#         print(q.queue)
-
-
-def get_neighbors(room):
-    return room.get_exits()
 
 
 # TRAVERSAL TEST

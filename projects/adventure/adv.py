@@ -55,12 +55,15 @@ def go_dep(path, n, e, w, s):
 
 
 class Path:
-    def __init__(self, id, path):
-        self.id = id
+    def __init__(self, room, path):
+        self.room = room
         self.path = path
 
 
-def get_closetest_path(start, graph):
+OPPOSITE = {'n': 's', 's': 'n', 'w': 'e', 'e': 'w'}
+
+
+def get_closest_path(start, graph):
     # Create an empty queue and enqueue A PATH TO the starting vertex ID
     q = Queue()
     q.enqueue(start)
@@ -72,16 +75,18 @@ def get_closetest_path(start, graph):
     while q.size() > 0:
 
         # Dequeue the first PATH
-        r = q.dequeue()
-        path = []
+        path = q.dequeue()
         # print(graph[start])
-        for dir, neighbor_v in graph[r].items():
+        for dir, neighbor_v in graph[path.room].items():
+            neighbor = '?' if neighbor_v == '?' else str(neighbor_v.id)
+            print("cur_room: %d, dir: %s, neighbor:%s" %
+                  (path.room.id, dir, str(neighbor)))
             if neighbor_v == "?":
-                return [dir]+path
+                return path.path + [dir]
             if neighbor_v not in visited:
-                q.enqueue(Path(neighbor_v, [dir]+path))
+                q.enqueue(Path(neighbor_v, path.path + [dir]))
                 visited.add(neighbor_v)
-    return None
+    return []
 
 
 # Load world
@@ -92,8 +97,8 @@ world = World()
 # map_file = "maps/test_line.txt"
 # map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
-map_file = "maps/test_loop_fork.txt"
-# map_file = "maps/main_maze.txt"
+# map_file = "maps/test_loop_fork.txt"
+map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph = literal_eval(open(map_file, "r").read())
@@ -113,21 +118,29 @@ unvisited = 1
 
 while unvisited > 0:
     # add room to graph
-    dir_graph = {}
-    for r in cur_room.get_exits():
-        dir_graph[r] = "?"
+    dir_graph = graph[cur_room] if cur_room in graph else {}
+    # print(dir_graph)
+    for dir in cur_room.get_exits():
+        if dir not in dir_graph:
+            dir_graph[dir] = "?"
+            unvisited += 1
     graph[cur_room] = dir_graph
 
-    # add num of neighbors to unvisited
-    unvisited = len(dir_graph)
     unvisited -= 1
-    print("un", unvisited)
-    closest_path = get_closetest_path(cur_room, graph)
-    print(closest_path)
+    closest_path = get_closest_path(Path(cur_room, []), graph)
+    # print(closest_path)
     for dir in closest_path:
         traversal_path.append(dir)
+        old_room = cur_room
         player.travel(dir)
         cur_room = player.current_room
+        dir_graph[dir] = cur_room
+
+        # get dir_graph of room we are in now
+        dir_graph = graph[cur_room] if cur_room in graph else {}
+        dir_graph[OPPOSITE[dir]] = old_room
+        graph[cur_room] = dir_graph
+
         print("room", cur_room.id)
 
 
@@ -165,14 +178,14 @@ else:
 # Exits: [n, s]
 
 player.current_room.print_room_description(player)
-# while True:
-#     cmds = input("-> ").lower().split(" ")
-#     if cmds[0] in ["n", "s", "e", "w"]:
-#         player.travel(cmds[0], True)
-#     elif cmds[0] == "q":
-#         break
-#     else:
-#         print("I did not understand that command.")
+while True:
+    cmds = input("-> ").lower().split(" ")
+    if cmds[0] in ["n", "s", "e", "w"]:
+        player.travel(cmds[0], True)
+    elif cmds[0] == "q":
+        break
+    else:
+        print("I did not understand that command.")
 
 
 # NoneType = type(None)

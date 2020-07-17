@@ -29,6 +29,7 @@ player = Player(world.starting_room)
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n', "s", "s", "s", "s", "s"]
 traversal_path = []
+count_n = 0
 NoneType = type(None)
 q = Queue()
 visited = set()
@@ -36,30 +37,48 @@ visited = set()
 q.enqueue(player.current_room)
 while q.size() > 0:
     path = q.dequeue()
-    print("type path", type(path))
     # str = type(path)
-    print(type(path) is NoneType)
-    if(type(path) is NoneType):
-        print("break??")
-        break
-    q.enqueue(path.get_room_in_direction("n"))
+    # print(type(path) is NoneType)
+    # if(type(path) is NoneType):
+    #     print("break??")
+    #     break
+    # q.enqueue(path.get_room_in_direction("n"))
     # u = path[-1]
 
-    # if path not in visited:
-    #     visited.add(path)
-    #     # get neighbors
-    #     directions = path.get_exits_string()
-    #     # grab n,e,s,w only
-    #     directions = directions[8:-1]
-    #     directions = directions.replace(',', '').replace(' ', '')
-    #     for d in directions:
-    #         # print(d)
-    #         path_copy = path
-    #         new_room = path.get_room_in_direction(d)
-    #         path_copy.append(new_room)
-    #         q.enqueue(path_copy)
-# print(q.queue)
-print("break")
+    if path not in visited:
+        print(path)
+        visited.add(path)
+        # get neighbors
+        directions = path.get_exits_string()
+        # grab n,e,s,w only
+        directions = directions[8:-1]
+        directions = directions.replace(',', '').replace(' ', '')
+        for d in directions:
+            #         path_copy = path
+
+            if d == "n":
+                # go n until touch wall
+                path_copy = path
+
+                while path_copy.get_room_in_direction("n"):
+                    count_n += 1
+                    traversal_path.append("n")
+                    path_copy = path_copy.get_room_in_direction("n")
+
+            #     traversal_path.append("s")
+            # if d == "s":
+            #     traversal_path.append("n")
+            # if d == "w":
+            #     traversal_path.append("e")
+            # if d == "e":
+            #     traversal_path.append("w")
+            # new_room = path.get_room_in_direction(d)
+            # path.append(new_room)
+            # q.enqueue(new_room)
+            # print(q.queue)
+
+print("count_n", count_n)
+print("t_p", traversal_path)
 
 # if u not in visited:
 #     visited.add(u)
@@ -71,8 +90,10 @@ print("break")
 #         q.enqueue(path_copy)
 #         print(q.queue)
 
-# def get_neighbors(room):
-#     return room.get_exits()
+
+def get_neighbors(room):
+    return room.get_exits()
+
 
 # TRAVERSAL TEST
 visited_rooms = set()
@@ -95,8 +116,8 @@ else:
 #######
 # UNCOMMENT TO WALK AROUND
 #######
-t = player.current_room  # Exits: [n, s, w, e]
-print("t", type(t))
+# t = player.current_room  # Exits: [n, s, w, e]
+# print("t", type(t))
 # t = player.current_room.get_exits_string() # Exits: [n, s, w, e]
 # t = player.current_room.name  # Room 0
 # t = player.current_room.id  # 0

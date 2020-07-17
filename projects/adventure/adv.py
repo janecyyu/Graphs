@@ -96,6 +96,36 @@ while q.size() > 0:
                     traversal_path.append("s")
                     path_n_copy = path_n_copy.get_room_in_direction("s")
 
+            if d == "s":
+                # go n until touch wall
+                path_n_copy = path
+
+                while path_n_copy.get_room_in_direction("s"):
+                    # count_n += 1
+                    traversal_path.append("s")
+                    path_n_copy = path_n_copy.get_room_in_direction("s")
+                # go south check if the room has neighbors
+                while len(get_neighbors(path_n_copy)) > 0 and path_n_copy.id != 0:
+                    # w or e
+                    w_copy = path_n_copy
+                    count_w = 0
+                    while "w" in get_neighbors(w_copy):
+                        count_w += 1
+                        traversal_path.append("w")
+                        w_copy = w_copy.get_room_in_direction("w")
+                    for i in range(count_w):
+                        traversal_path.append("e")
+                    e_copy = path_n_copy
+                    count_e = 0
+                    while "e" in get_neighbors(e_copy):
+                        traversal_path.append("e")
+                        e_copy = e_copy.get_room_in_direction("e")
+                    for i in range(count_e):
+                        traversal_path.append("w")
+
+                    traversal_path.append("n")
+                    path_n_copy = path_n_copy.get_room_in_direction("n")
+
 
 print("count_n", count_n)
 print("t_p", traversal_path)

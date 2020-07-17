@@ -88,6 +88,7 @@ while q.size() > 0:
                     e_copy = path_n_copy
                     count_e = 0
                     while "e" in get_neighbors(e_copy):
+                        count_e += 1
                         traversal_path.append("e")
                         e_copy = e_copy.get_room_in_direction("e")
                     for i in range(count_e):
@@ -118,6 +119,7 @@ while q.size() > 0:
                     e_copy = path_n_copy
                     count_e = 0
                     while "e" in get_neighbors(e_copy):
+                        count_e += 1
                         traversal_path.append("e")
                         e_copy = e_copy.get_room_in_direction("e")
                     for i in range(count_e):
@@ -125,6 +127,68 @@ while q.size() > 0:
 
                     traversal_path.append("n")
                     path_n_copy = path_n_copy.get_room_in_direction("n")
+
+            if d == "w":
+                # go west until touch wall
+                path_w_copy = path
+
+                while path_w_copy.get_room_in_direction("w"):
+                    # count_n += 1
+                    traversal_path.append("w")
+                    path_w_copy = path_w_copy.get_room_in_direction("w")
+                # go south check if the room has neighbors
+                while len(get_neighbors(path_w_copy)) > 0 and path_w_copy.id != 0:
+                    # n or s
+                    n_copy = path_w_copy
+                    count_n = 0
+                    while "n" in get_neighbors(n_copy):
+                        count_n += 1
+                        traversal_path.append("n")
+                        n_copy = n_copy.get_room_in_direction("n")
+                    for i in range(count_n):
+                        traversal_path.append("s")
+                    s_copy = path_w_copy
+                    count_s = 0
+                    while "s" in get_neighbors(s_copy):
+                        count_s += 1
+                        traversal_path.append("s")
+                        s_copy = s_copy.get_room_in_direction("s")
+                    for i in range(count_s):
+                        traversal_path.append("n")
+
+                    traversal_path.append("e")
+                    path_w_copy = path_w_copy.get_room_in_direction("e")
+
+            if d == "e":
+                # go west until touch wall
+                path_w_copy = path
+
+                while path_w_copy.get_room_in_direction("e"):
+                    # count_n += 1
+                    traversal_path.append("e")
+                    path_w_copy = path_w_copy.get_room_in_direction("e")
+                # go south check if the room has neighbors
+                while len(get_neighbors(path_w_copy)) > 0 and path_w_copy.id != 0:
+                    # n or s
+                    n_copy = path_w_copy
+                    count_n = 0
+                    while "n" in get_neighbors(n_copy):
+                        count_n += 1
+                        traversal_path.append("n")
+                        n_copy = n_copy.get_room_in_direction("n")
+                    for i in range(count_n):
+                        traversal_path.append("s")
+                    s_copy = path_w_copy
+                    count_s = 0
+                    while "s" in get_neighbors(s_copy):
+                        count_s += 1
+                        traversal_path.append("s")
+                        s_copy = s_copy.get_room_in_direction("s")
+                    for i in range(count_s):
+                        traversal_path.append("n")
+
+                    traversal_path.append("w")
+                    path_w_copy = path_w_copy.get_room_in_direction("w")
 
 
 print("count_n", count_n)

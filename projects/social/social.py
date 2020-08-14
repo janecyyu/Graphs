@@ -1,6 +1,11 @@
+import random
+from util import Stack, Queue
+
+
 class User:
     def __init__(self, name):
         self.name = name
+
 
 class SocialGraph:
     def __init__(self):
@@ -45,8 +50,24 @@ class SocialGraph:
         # !!!! IMPLEMENT ME
 
         # Add users
+        for i in range(num_users):
+            self.add_user(f"User {i}")
 
         # Create friendships
+        possible_friendships = []
+
+        for user_id in self.users:
+            for friend_id in range(user_id+1, self.last_id+1):
+                possible_friendships.append((user_id, friend_id))
+        # shuffle the possible friendship
+        random.shuffle(possible_friendships)
+        # print(possible_friendships)
+
+        # add friendships
+        for i in range(num_users * avg_friendships // 2):
+            friendship = possible_friendships[i]
+            # print(friendship)
+            self.add_friendship(friendship[0], friendship[1])
 
     def get_all_social_paths(self, user_id):
         """
@@ -57,9 +78,37 @@ class SocialGraph:
 
         The key is the friend's ID and the value is the path.
         """
-        visited = {}  # Note that this is a dictionary, not a set
+        # visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
-        return visited
+        # store_k = set()
+        # for k, v in self.friendships.items():
+        #     if k == user_id:
+        #         visited[k] = [k]
+        #     else:
+        #         for neighbor in self.get_neighbors(k):
+        #             if neighbor in visited:
+        #                 visited[k] = visited[neighbor] + [k]
+
+        q = Queue()
+        visited = set()
+        result = {}
+
+        q.enqueue([user_id])
+        while q.size() > 0:
+            path = q.dequeue()
+            u = path[-1]
+            if u not in visited:
+                visited.add(u)
+                result[u] = path
+                for neighbor in self.friendships[u]:
+                    path_copy = list(path)
+                    path_copy.append(neighbor)
+                    q.enqueue(path_copy)
+
+        return result
+
+    def get_neighbors(self, friend):
+        return self.friendships[friend]
 
 
 if __name__ == '__main__':
